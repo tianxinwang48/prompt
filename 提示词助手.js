@@ -8,6 +8,9 @@
 // @author       tianxinwang48
 // @match        https://chatgpt.com/*
 // @match        https://*.deepseek.com/*
+// @match        https://www.tongyi.com/qianwen/*
+// @match        https://qwen.aliyun.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=deepseek.com
 // @grant        none
 // ==/UserScript==
 
@@ -107,7 +110,10 @@
     }
 
     function insertPrompt(text) {
-        let input = document.querySelector('div[contenteditable="true"]') || document.querySelector('textarea');
+        let input = document.querySelector('div[contenteditable="true"]') ||
+                document.querySelector('textarea') ||
+                document.querySelector('[aria-label="输入提示词"]') ||
+                document.querySelector('.input-box');
         if (!input) { console.warn('找不到输入框'); return; }
         input.focus();
         if (input.tagName.toLowerCase() === 'textarea') {
@@ -130,7 +136,7 @@
         panel.id = 'prompt-helper-panel';
         panel.style.cssText = 'position:fixed;bottom:70px;right:20px;width:320px;background:#f9f9f9;border:1px solid #ccc;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:12px;z-index:9999;font-family:sans-serif;';
         const templates = getTemplates();
-        const site = location.hostname.includes('deepseek') ? 'DeepSeek' : 'ChatGPT';
+        const site = location.hostname.includes('deepseek') ? 'DeepSeek' :location.hostname.includes('tongyi')?'Qwen': 'ChatGPT';
         const listHtml = templates.map((t,i) =>
                                        `<li style="margin-bottom:8px;display:flex;gap:4px;"><button data-id="${i}" class="template-btn" style="flex:1;padding:6px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;text-align:left;">${t.name}</button><button data-del="${i}" style="color:red;border:none;background:none;cursor:pointer;">✖</button></li>`
         ).join('');
